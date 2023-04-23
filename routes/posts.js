@@ -4,7 +4,8 @@ const Posts = require("../schemas/post.js");
 
 // 1. 전체 게시글 목록 조회
 router.get("/posts", async (req, res) => {
-
+    const posts = await Posts.find({});
+    return res.status(200).json({ "data": posts })
 })
 
 // 2. 게시글 작성
@@ -26,3 +27,5 @@ router.put("/posts/:_postId", async (req, res) => {
 router.delete("/posts/:_postId", async (req, res) => {
 
 })
+
+module.exports = router
