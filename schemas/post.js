@@ -9,16 +9,18 @@ const postsSchema = new mongoose.Schema({
   user: {
     type: String,
     required: true,
-    unique: true
   },
   title: {
-    type: String
+    type: String,
+    required: true,
   },
   content: {
-    type: String
+    type: String,
+    required: true,
   },
   password: {
-    type: String
+    type: String,
+    required: true,
   },
   createdAt: {
     type: Number
