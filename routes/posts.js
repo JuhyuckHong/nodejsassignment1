@@ -4,7 +4,8 @@ const Posts = require("../schemas/post.js");
 
 // 1. 전체 게시글 목록 조회
 router.get("/posts", async (req, res) => {
-    const posts = await Posts.find({});
+    const posts = await Posts.find({})
+        .select("postId user title createdAt -_id");
     return res.status(200).json({ "data": posts })
 })
 
