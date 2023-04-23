@@ -23,7 +23,7 @@ const postsSchema = new mongoose.Schema({
     required: true,
   },
   createdAt: {
-    type: Number
+    type: Date
   }
 });
 
