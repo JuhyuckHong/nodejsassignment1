@@ -1,0 +1,15 @@
+# 디렉토리
+node_modules/
+
+# 로컬 환경 설정 파일
+.env
+.env.local
+.env.*.local
+
+# vscode
+.vscode/
+
+# authorization, security
+*.pem
+*.crt
+*.key
