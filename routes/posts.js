@@ -44,14 +44,14 @@ router.post("/posts", async (req, res) => {
 // 3. 게시글 상세 조회
 router.get("/posts/:_postId", async (req, res) => {
     const { _postId } = req.params
-    // console.log(_postId)
-    const post = await Posts.find({})
+
+    await Posts.find({})
         .where("postId").equals(_postId)
-        .select("-_id -__v -password")
-
-    // console.log(post)
-
-    return res.status(200).json({ "data": post })
+        .select("-_id -__v -password").then((result) => {
+            return res.status(200).json({ "data": result })
+        }).catch((error) => {
+            return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
+        })
 
 })
 
