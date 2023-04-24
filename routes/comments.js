@@ -17,7 +17,7 @@ router.get("/posts/:_postId/comments", async (req, res) => {
         comments.sort((a, b) => b.createdAt - a.createdAt)
         // 200, 데이터 반환
         return res.status(200).json({ "data": comments })
-    // params의 데이터 형식 오류 시 400, 데이터 형식 오류 메시지 반환
+        // params의 데이터 형식 오류 시 400, 데이터 형식 오류 메시지 반환
     } catch (error) {
         return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
     }
@@ -77,10 +77,16 @@ router.put("/posts/:_postId/comments/:_commentId", async (req, res) => {
             .where("postId").equals(_postId)
         // 검색결과가 있는 경우,
         if (result.length) {
-            // body내용으로 DB 업데이트하고,
-            await Comments.updateOne({ commentId: _commentId }, { $set: { content, password } })
-            // 201, 수정 완료 메시지 반환
-            return res.status(201).json({ message: "댓글을 수정하였습니다." })
+            // 비밀번호 일치 시
+            if (password === result[0].password) {
+                // body내용으로 DB 업데이트하고,
+                await Comments.updateOne({ commentId: _commentId }, { $set: { content, password } })
+                // 201, 수정 완료 메시지 반환
+                return res.status(201).json({ message: "댓글을 수정하였습니다." })
+                // 비밀번호 불일치 시, 401 삭제권한 없음 메시지 반환
+            } else {
+                return res.status(401).json({ message: "수정 권한이 없습니다." })
+            }
             // 검색 결과가 없는 경우 404, 댓글 조회 실패 메시지 반환
         } else {
             return res.status(404).json({ message: "댓글 조회에 실패하였습니다." })
@@ -110,7 +116,7 @@ router.delete("/posts/:_postId/comments/:_commentId", async (req, res) => {
             await Comments.deleteOne({ commentId: _commentId })
             // 200, 삭제 완료 메시지 반환
             return res.status(200).json({ message: "댓글을 삭제하였습니다." })
-        // 검색 결과가 없는 경우 400, 게시글 조회 실패 메시지 반환
+            // 검색 결과가 없는 경우 400, 게시글 조회 실패 메시지 반환
         } else {
             return res.status(404).json({ message: "댓글 조회에 실패하였습니다." })
         }
