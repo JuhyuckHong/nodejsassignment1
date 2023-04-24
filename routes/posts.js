@@ -33,7 +33,7 @@ router.post("/posts", async (req, res) => {
     await Posts.create({ user, password, title, content, postId, createdAt })
 
     // 200, 게시글 생성 메시지 반환
-    return res.status(200).json({ message: "게시글을 생성하였습니다." })
+    return res.status(201).json({ message: "게시글을 생성하였습니다." })
 
 })
 
@@ -70,7 +70,7 @@ router.put("/posts/:_postId", async (req, res) => {
         // 검색결과가 있는 경우 post에 저장
         if (result.length) {
             await Posts.updateOne({ postId: _postId }, { $set: { title, content, password } })
-            return res.status(200).json({ message: "게시글을 수정하였습니다." })
+            return res.status(201).json({ message: "게시글을 수정하였습니다." })
             // 검색 결과가 없는 경우 400, 게시글 조회 실패 메시지 반환
         } else {
             return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })
