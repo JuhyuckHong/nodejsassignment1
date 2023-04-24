@@ -82,7 +82,7 @@ router.put("/posts/:_postId", async (req, res) => {
                 // 201, 수정 완료 메시지 반환
                 return res.status(201).json({ message: "게시글을 수정하였습니다." })
             } else {
-                return res.status(401).json({ message: "삭제 권한이 없습니다." })
+                return res.status(401).json({ message: "수정 권한이 없습니다." })
             }
             // 검색 결과가 없는 경우 404, 게시글 조회 실패 메시지 반환
         } else {
