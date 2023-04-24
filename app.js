@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
     <body style="background-color: black; color: white;">
         <h1>Node 입문주차 과제</h1>
         <small> 홍주혁 파트타임1기</small>
+        <p> test </p>
     </body>
     </html>`)
 });
