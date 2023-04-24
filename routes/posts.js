@@ -3,10 +3,14 @@ const router = express.Router()
 const Posts = require("../schemas/post.js");
 
 // 1. 전체 게시글 목록 조회
+// - 제목, 작성자명, 작성 날짜를 조회하기
+// - 작성 날짜 기준으로 내림차순 정렬하기
 router.get("/posts", async (req, res) => {
     // 전체 게시글 중에 postId, user, title, createdAt 만 추출
     const posts = await Posts.find({})
         .select("postId user title createdAt -_id");
+    // 작성 날짜 기준으로 내림차순 정렬하기
+    posts.sort((a, b) => b.createdAt - a.createdAt)
     // 200, 데이터 반환
     return res.status(200).json({ "data": posts })
 })
@@ -49,7 +53,7 @@ router.get("/posts/:_postId", async (req, res) => {
         .select("-_id -__v -password").then((result) => {
             // 찾은 경우 200, 데이터 반환
             return res.status(200).json({ "data": result })
-        // postId 필드 타입과 다른 경우 400, 데이터 형식 오류 메시지 반환
+            // postId 필드 타입과 다른 경우 400, 데이터 형식 오류 메시지 반환
         }).catch((error) => {
             return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
         })
@@ -74,11 +78,11 @@ router.put("/posts/:_postId", async (req, res) => {
             await Posts.updateOne({ postId: _postId }, { $set: { title, content, password } })
             // 201, 수정 완료 메시지 반환
             return res.status(201).json({ message: "게시글을 수정하였습니다." })
-        // 검색 결과가 없는 경우 404, 게시글 조회 실패 메시지 반환
+            // 검색 결과가 없는 경우 404, 게시글 조회 실패 메시지 반환
         } else {
             return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })
         }
-    // 필드 타입 Number로 들어오지 않은 경우 400, 데이터 형식 오류 메시지 반환
+        // 필드 타입 Number로 들어오지 않은 경우 400, 데이터 형식 오류 메시지 반환
     } catch (error) {
         return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
     }
@@ -101,7 +105,7 @@ router.delete("/posts/:_postId", async (req, res) => {
             await Posts.deleteOne({ postId: _postId })
             // 200, 삭제 완료 메시지 반환
             return res.status(200).json({ message: "게시글을 삭제하였습니다." })
-        // 검색 결과가 없는 경우 400, 게시글 조회 실패 메시지 반환
+            // 검색 결과가 없는 경우 400, 게시글 조회 실패 메시지 반환
         } else {
             return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })
         }
