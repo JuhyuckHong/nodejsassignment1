@@ -83,7 +83,27 @@ router.put("/posts/:_postId", async (req, res) => {
 
 // 5. 게시글 삭제 
 router.delete("/posts/:_postId", async (req, res) => {
+    // 파라미터로 들어온 _postId를 필드 타입인 Number로 변환해서 저장하고,
+    const _postId = Number(req.params._postId)
+    // body에서, 삭제할 게시글의 password를 받아와서,
+    const { password } = req.body
 
+    try {
+        // 게시글 내용을 DB에서 검색해서 result로 반환
+        const result = await Posts.find({})
+            .where("postId").equals(_postId)
+        // 검색결과가 있는 경우 해당 게시글 DB에서 삭제
+        if (result.length) {
+            await Posts.deleteOne({ postId: _postId })
+            return res.status(201).json({ message: "게시글을 삭제하였습니다." })
+            // 검색 결과가 없는 경우 400, 게시글 조회 실패 메시지 반환
+        } else {
+            return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })
+        }
+        // 필드 타입 Number로 들어오지 않은 경우 400, 데이터 형식 오류 메시지 반환
+    } catch (error) {
+        return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
+    }
 })
 
 module.exports = router
