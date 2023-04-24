@@ -60,6 +60,7 @@ router.get("/posts/:_postId", async (req, res) => {
 })
 
 // 4. 게시글 수정
+// - API를 호출할 때 입력된 비밀번호를 비교하여 동일할 때만 글이 수정되게 하기
 router.put("/posts/:_postId", async (req, res) => {
     // 파라미터로 들어온 _postId를 필드 타입인 Number로 변환해서 저장하고,
     const _postId = Number(req.params._postId)
@@ -74,10 +75,15 @@ router.put("/posts/:_postId", async (req, res) => {
 
         // 검색결과가 있는 경우,
         if (result.length) {
-            // body내용으로 DB 업데이트하고,
-            await Posts.updateOne({ postId: _postId }, { $set: { title, content, password } })
-            // 201, 수정 완료 메시지 반환
-            return res.status(201).json({ message: "게시글을 수정하였습니다." })
+
+            if (password === result[0].password) {
+                // body내용으로 DB 업데이트하고,
+                await Posts.updateOne({ postId: _postId }, { $set: { title, content, password } })
+                // 201, 수정 완료 메시지 반환
+                return res.status(201).json({ message: "게시글을 수정하였습니다." })
+            } else {
+                return res.status(401).json({ message: "삭제 권한이 없습니다."})
+            }
             // 검색 결과가 없는 경우 404, 게시글 조회 실패 메시지 반환
         } else {
             return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })
