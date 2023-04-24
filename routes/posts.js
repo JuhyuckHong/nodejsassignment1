@@ -31,7 +31,7 @@ router.post("/posts", async (req, res) => {
         .sort({ postId: -1 })
         .limit(1)
         .select("postId")
-    postId = lastPostId[0]["postId"] + 1
+    postId = lastPostId.length ? lastPostId[0]["postId"] + 1 : 1
 
     // 작성시간 생성
     createdAt = new Date()
