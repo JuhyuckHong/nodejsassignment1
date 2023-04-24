@@ -25,7 +25,35 @@ router.get("/posts/:_postId/comments", async (req, res) => {
 
 // 2. 댓글 작성
 router.post("/posts/:_postId/comments", async (req, res) => {
+    // params를 postId에 저장
+    const postId = Number(req.params._postId)
+    // body값을 변수에 저장
+    const { user, password, content } = req.body
 
+    // 필수값인 content 중 없는 자료가 있는 경우
+    if (!(content)) {
+        // 400, 댓글 내용 입력 요청 메시지 반환
+        return res.status(400).json({ message: "댓글 내용을 입력해주세요." })
+    } else if (!(user && password)) {
+        // 400, 데이터 형식 오류 메시지 반환
+        return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
+    }
+
+    // 가장 최근 부여된 commentId 검색
+    let lastCommentId = await Comments.find({})
+        .where('commentId')
+        .sort({ commentId: -1 })
+        .limit(1)
+        .select("commentId")
+    const commentId = lastCommentId.length ? lastCommentId[0]["commentId"] + 1 : 1
+
+    // 작성시간 생성
+    createdAt = new Date()
+
+    // DB에 추가
+    await Comments.create({ commentId, user, password, content, postId, createdAt })
+    // 201, 게시글 생성 메시지 반환
+    return res.status(201).json({ message: "게시글을 생성하였습니다." })
 })
 
 // 3. 댓글 수정
