@@ -53,7 +53,7 @@ router.post("/posts/:_postId/comments", async (req, res) => {
     // DB에 추가
     await Comments.create({ commentId, user, password, content, postId, createdAt })
     // 201, 게시글 생성 메시지 반환
-    return res.status(201).json({ message: "게시글을 생성하였습니다." })
+    return res.status(201).json({ message: "댓글을 생성하였습니다." })
 })
 
 // 3. 댓글 수정
