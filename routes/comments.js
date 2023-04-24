@@ -57,8 +57,38 @@ router.post("/posts/:_postId/comments", async (req, res) => {
 })
 
 // 3. 댓글 수정
-router.put("/posts/:_postId/comments", async (req, res) => {
+router.put("/posts/:_postId/comments/:_commentId", async (req, res) => {
+    // 파라미터로 들어온 _postId를 필드 타입인 Number로 변환해서 저장하고,
+    const _postId = Number(req.params._postId)
+    const _commentId = Number(req.params._commentId)
+    // 수정 할 내용이 담긴 body에서, password, contents를 받아와서
+    const { password, content } = req.body
 
+    // 필수값인 content를 입력받지 못한 경우
+    if (!(content)) {
+        // 400, 댓글 내용 입력 요청 메시지 반환
+        return res.status(400).json({ message: "댓글 내용을 입력해주세요." })
+    }
+
+    try {
+        // 코멘트 내용을 DB에서 검색해서 result로 반환
+        const result = await Comments.find({})
+            .where("commentId").equals(_commentId)
+            .where("postId").equals(_postId)
+        // 검색결과가 있는 경우,
+        if (result.length) {
+            // body내용으로 DB 업데이트하고,
+            await Comments.updateOne({ commentId: _commentId }, { $set: { content, password } })
+            // 201, 수정 완료 메시지 반환
+            return res.status(201).json({ message: "댓글을 수정하였습니다." })
+            // 검색 결과가 없는 경우 404, 댓글 조회 실패 메시지 반환
+        } else {
+            return res.status(404).json({ message: "댓글 조회에 실패하였습니다." })
+        }
+        // 필드 타입 Number로 들어오지 않은 경우 400, 데이터 형식 오류 메시지 반환
+    } catch (error) {
+        return res.status(400).json({ message: "데이터 형식이 올바르지 않습니다." })
+    }
 })
 
 // 4. 댓글 삭제
