@@ -10,15 +10,11 @@ const commentsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  user: {
+  nickname: {
     type: String,
     required: true,
   },
   content: {
-    type: String,
-    required: true,
-  },
-  password: {
     type: String,
     required: true,
   },

@@ -6,7 +6,7 @@ const postsSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  user: {
+  nickname: {
     type: String,
     required: true,
   },
@@ -15,10 +15,6 @@ const postsSchema = new mongoose.Schema({
     required: true,
   },
   content: {
-    type: String,
-    required: true,
-  },
-  password: {
     type: String,
     required: true,
   },
