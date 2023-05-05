@@ -35,11 +35,16 @@ First Node.js Assignment: Building Blog Back-End Server with Node.js + Express +
 ## 디렉토리 구조
 	.
 	├── app.js
+	├── index.html
 	├── routes
 	│   ├── index.js
+	│   ├── users.js
 	│   ├── comments.js
 	│   └── posts.js
+	├── middlewares
+	│   └── auth-middleware.js
 	└── schemas
-	├── index.js
-	├── comment.js
-	└── post.js
+		├── index.js
+		├── users.js
+		├── comment.js
+		└── post.js
