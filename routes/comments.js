@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Comments = require("../schemas/comment.js");
+const Posts = require("../schemas/post.js");
 const auth = require("../middlewares/auth-middleware");
 
 // 1. 댓글 목록 조회
@@ -9,6 +10,14 @@ const auth = require("../middlewares/auth-middleware");
 router.get("/posts/:_postId/comments", async (req, res) => {
   // params를 _postId로 저장
   const postId = Number(req.params._postId);
+  
+  // 게시글이 없는 경우
+  const result = await Posts.find({})
+                .where("postId")
+                .equals(_postId)
+  if (result.length) {
+    return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })}
+  
   // postId에 해당하는 comment 조회
   try {
     // commnetId, nickname, content, createdAt 데이터만 받도록 select
@@ -36,6 +45,13 @@ router.post("/posts/:_postId/comments", auth, async (req, res) => {
   // body값을 변수에 저장
   const { content } = req.body;
 
+  // 댓글 작성할 게시글이 없는 경우
+  const result = await Posts.find({})
+                .where("postId")
+                .equals(_postId)
+  if (result.length) {
+    return res.status(404).json({ message: "게시글 조회에 실패하였습니다." })}
+  
   // 필수값인 content 중 없는 자료가 있는 경우
   if (!content) {
     // 400, 댓글 내용 입력 요청 메시지 반환
